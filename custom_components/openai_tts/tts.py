@@ -16,6 +16,7 @@ OPENAI_TTS_URL = "https://api.openai.com/v1/audio/speech"
 CONF_MODEL = 'model'
 CONF_VOICE = 'voice'
 CONF_SPEED = 'speed'
+CONF_URL = 'url'
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_API_KEY): cv.string,
@@ -23,6 +24,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_MODEL, default='tts-1'): cv.string,
     vol.Optional(CONF_VOICE, default='shimmer'): cv.string,
     vol.Optional(CONF_SPEED, default=1): cv.string,
+    vol.Optional(CONF_URL, default=None): cv.string
 })
 
 def get_engine(hass, config, discovery_info=None):
@@ -32,12 +34,13 @@ def get_engine(hass, config, discovery_info=None):
     model = config.get(CONF_MODEL)
     voice = config.get(CONF_VOICE)
     speed = config.get(CONF_SPEED)
+    url = config.get(CONF_URL)
     return OpenAITTSProvider(hass, api_key, language, model, voice, speed)
 
 class OpenAITTSProvider(Provider):
     """The OpenAI TTS API provider."""
 
-    def __init__(self, hass, api_key, lang, model, voice, speed):
+    def __init__(self, hass, api_key, lang, model, voice, speed, url):
         """Initialize OpenAI TTS provider."""
         self.hass = hass
         self._api_key = api_key
@@ -45,6 +48,7 @@ class OpenAITTSProvider(Provider):
         self._model = model
         self._voice = voice
         self._speed = speed
+        self._url = url
 
     @property
     def default_language(self):
@@ -75,7 +79,7 @@ class OpenAITTSProvider(Provider):
 
         try:
             # Make the POST request to the correct endpoint for generating speech
-            response = requests.post(OPENAI_TTS_URL, json=data, headers=headers)
+            response = requests.post(self._url or OPENAI_TTS_URL, json=data, headers=headers)
             response.raise_for_status()  # Raises an HTTPError if the HTTP request returned an unsuccessful status code
 
             # The response should contain the audio file content
