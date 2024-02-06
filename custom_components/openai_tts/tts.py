@@ -65,7 +65,7 @@ class OpenAITTSProvider(Provider):
         """Convert a given text to speech and return it as bytes."""
         # Define the headers, including the Authorization header with your API key
         headers = {
-            'Authorization': f'Bearer {self._api_key}'
+            'Authorization': f'api-key {self._api_key}' if (self._url is not None and "azure" in self._url) else f'Bearer {self._api_key}'
         }
 
         # Define the data payload, specifying the model, input text, voice, and response format
