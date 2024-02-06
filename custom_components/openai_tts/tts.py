@@ -53,13 +53,13 @@ class OpenAITTSProvider(Provider):
     @property
     def default_language(self):
         """Return the default language."""
-        return self._language
+        return self._language.split(",")[0]
 
     @property
     def supported_languages(self):
         """Return the list of supported languages."""
         # Ideally, this list should be dynamically fetched from OpenAI, if supported.
-        return [self._language]
+        return self._language.split(",")
 
     def get_tts_audio(self, message, language, options=None):
         """Convert a given text to speech and return it as bytes."""
