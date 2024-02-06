@@ -35,7 +35,7 @@ def get_engine(hass, config, discovery_info=None):
     voice = config.get(CONF_VOICE)
     speed = config.get(CONF_SPEED)
     url = config.get(CONF_URL)
-    return OpenAITTSProvider(hass, api_key, language, model, voice, speed)
+    return OpenAITTSProvider(hass, api_key, language, model, voice, speed, url)
 
 class OpenAITTSProvider(Provider):
     """The OpenAI TTS API provider."""
