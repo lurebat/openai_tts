@@ -106,6 +106,11 @@ class OpenAISTTProvider(Provider):
         files = {
             'file': ('filename.wav', audio_data, 'audio/wav')
         }
+
+        # todo find a better way to pass "no language"
+        if self._language == "en-US":
+            self._language = None
+        
         data = {
             'model': 'whisper-1',
             'language': self._language,
